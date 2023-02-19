@@ -1,0 +1,29 @@
+# 更多工作流配置参考：https://github.com/actions/starter-workflows
+# CI工作流名字
+name: 'CI'
+
+on:
+  # 控制CI当main分支有push动作触发的时候执行工作流
+  push:
+    branches: ['none']
+
+jobs:
+  # 工作流中的一个叫做build的任务job
+  build:
+    # build这项任务会在ubuntu上进行执行
+    runs-on: ubuntu-latest
+
+    # 执行build这项任务的具体步骤是
+    steps:
+      # step1：使用actions/checkout@v3这个包拉这个项目的代码
+      - uses: actions/checkout@v3 # 其实是github有个用户叫做actions，有个叫做checkout的仓库，这个仓库的v3分支已经写好了一些检出代码的流程，我们这么写就可以直接复用流程
+
+      # step2：在
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with: # 指定相关信息
+          node-version: '14' # 执行node版本是14
+
+      # step3：请使用pnpm/action-setup@v2下载pnpm
+      - name: Install pnpm # 给step2取个名字吧
+        uses: pnpm/action-setup@v2 # 一样的，在pnpm这个用户|组织下，有个action-setup的仓库，它的v2分支已经帮我们写好了相关下载pnpm的代码
