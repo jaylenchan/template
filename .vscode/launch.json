@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 定义调试器名字：nodemon
+      "name": "nodemon",
+      // 项目根目录下的main.ts是应用程序的主入口
+      "program": "${workspaceFolder}/main.ts",
+      // 使用项目根目录下的node_modules当中的.bin/nodemon来运行（本地安装nodemon依赖包的调试方法）
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/nodemon",
+      "runtimeArgs": [
+        "--exec",
+        "electron"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "request": "launch",
+      "restart": true,
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    }
+  ]
+}

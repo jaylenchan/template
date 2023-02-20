@@ -5,5 +5,6 @@
 |                          模板                           |
 | :-----------------------------------------------------: |
 | [自动创建release](.github/workflows/create-release.yml) |
-|                                                         |
+|        [nodemon调试eletron](.vscode/launch.json)        |
+|      [mac下生成icns的脚本](scripts/create-icns.sh)      |
 
