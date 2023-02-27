@@ -1,0 +1,104 @@
+// 目录中存在 tsconfig.json 文件表明该目录是 TypeScript 项目的根目录
+{
+  // =====首先加载tsconfig.base.json的配置，然后当前的tsconfig.json会用自己里头的选项覆盖tsconfig.base.json的同名配置。
+  // =====大坑：现在所在的tsconfig.json继承的配置当中，如果tsconfig.base.json中有定义相对路径，解析这些相对路径都是基于tsconfig.base.json所在目录开始的，而不是当前这个tsconfig.json所在目录开始
+  // =====解决方式：每个相对路径在当前的tsconfig.json当中全部重新定义一次，则tsc编译的时候，才会根据当前定义的相对路径来找。
+  // =====换句话来说就是，不要在tsconfig.base.json定义路径相关的字段，基本配置只去做一些跟路径无关的配置就没事
+  "extends": "tsconfig.base.json",
+  "compilerOptions": {
+    // ====================================项目编译配置====================
+    // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */
+    // "composite": true,                                /* Enable constraints that allow a TypeScript project to be used with project references. */
+    // "tsBuildInfoFile": "./.tsbuildinfo",              /* Specify the path to .tsbuildinfo incremental compilation file. */
+    // "disableSourceOfProjectReferenceRedirect": true,  /* Disable preferring source files instead of declaration files when referencing composite projects. */
+    // "disableSolutionSearching": true,                 /* Opt a project out of multi-project reference checking when editing. */
+    // "disableReferencedProjectLoad": true,             /* Reduce the number of projects loaded automatically by TypeScript. */
+    // ============================语言和环境编译配置========================
+    "target": "es2016", /* 指定tsc编译时将ts转换成 的js版本 */
+    "lib": [], /* 指定一组运行环境的库声明文件，比如node环境不需要BOM和DOM，就可以打开重新指定node环境的库声明，再次使用BOM相关语法编译器就会显示找不到该API */
+    "jsx": "preserve", /* 指定jsx语法不进行任何转换，场景：如果是指定成react，就会使用react jsx转换语法处理项目中写的jsx */
+    "experimentalDecorators": true, /* 指定ts项目开发中，允许使用装饰器语法 */
+    // "emitDecoratorMetadata": true,                    /* Emit design-type metadata for decorated declarations in source files. */
+    // "jsxFactory": "",                                 /* Specify the JSX factory function used when targeting React JSX emit, e.g. 'React.createElement' or 'h'. */
+    // "jsxFragmentFactory": "",                         /* Specify the JSX Fragment reference used for fragments when targeting React JSX emit e.g. 'React.Fragment' or 'Fragment'. */
+    // "jsxImportSource": "",                            /* Specify module specifier used to import the JSX factory functions when using 'jsx: react-jsx*'. */
+    // "reactNamespace": "",                             /* Specify the object invoked for 'createElement'. This only applies when targeting 'react' JSX emit. */
+    // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
+    // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
+    // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
+    // ====================================模块编译配置======================
+    "module": "commonjs", /* 当tsc编译文件的时候，将文件编译成cjs模块  */
+    // "rootDir": "./", /* Specify the root folder within your source files. */
+    "moduleResolution": "node", /* 使用ts开发代码导入模块的时候，使用node模块路径解析算法去查找文件*/
+    "baseUrl": "./", /* 路径别名配置1： 用于配置路径别名的基本指定路径是哪里 */
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }, /* 路径别名配置2： 用于配置路径的别名，直接在项目中使用@/xxx的方式导入模块，值src/*中，src是相对于baseUrl所指的目录的，即baseUrl/src/* */
+    // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
+    // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
+    // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
+    // "allowUmdGlobalAccess": true,                     /* Allow accessing UMD globals from modules. */
+    // "moduleSuffixes": [],                             /* List of file name suffixes to search when resolving a module. */
+    "resolveJsonModule": true, /* 使用ts开发代码导入模块的时候，允许导入json文件作为模块 */
+    // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
+    // ====================================编译导出配置=======================
+    "outDir": "./dist", /* 当tsc将所有需要编译的文件编译完成之后，统一放到当前文件夹的dist文件夹中*/
+    "removeComments": true, /* 当tsc编译文件的时候，请去除文件的注释 */
+    "declaration": true, /* 当tsc编译文件的时候，请产出.d.ts声明文件 */
+    "declarationMap": true, /* 当tsc编译文件的时候，请产出所生成的.d.ts声明文件对应的sourcemap文件 */
+    "outF ile": "./dist/app.js", /* 当tsc编译文件时，将所有文件合成一个文件app.js。但只支持module:system | amd(这种功能一般是webpack、vite这种打包工具做的) */
+    // "emitDeclarationOnly": true,                      /* Only output d.ts files and not JavaScript files. */
+    // "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
+    "noEmit": true, /* tsc编译文件完成后，不产生编译完成后的结果文件，使用场景：只让tsc做类型检查，让其他工具去做代码编译转换操作，比如webpack这些  */
+    "noEmitOnError": true, /* 强编译：tsc编译文件的时候，如果发现编译类型检查等编译出错，阻断不产生编译完成后的结果文件 */
+    // "importHelpers": true,                            /* Allow importing helper functions from tslib once per project, instead of including them per-file. */
+    // "importsNotUsedAsValues": "remove",               /* Specify emit/checking behavior for imports that are only used for types. */
+    // "downlevelIteration": true,                       /* Emit more compliant, but verbose and less performant JavaScript for iteration. */
+    // "sourceRoot": "",                                 /* Specify the root path for debuggers to find the reference source code. */
+    // "mapRoot": "",                                    /* Specify the location where debugger should locate map files instead of generated locations. */
+    // "inlineSourceMap": true,                          /* Include sourcemap files inside the emitted JavaScript. */
+    // "inlineSources": true,                            /* Include source code in the sourcemaps inside the emitted JavaScript. */
+    // "emitBOM": true,                                  /* Emit a UTF-8 Byte Order Mark (BOM) in the beginning of output files. */
+    // "newLine": "crlf",                                /* Set the newline character for emitting files. */
+    // "stripInternal": true,                            /* Disable emitting declarations that have '@internal' in their JSDoc comments. */
+    // "noEmitHelpers": true,                            /* Disable generating custom helper functions like '__extends' in compiled output. */
+    // "preserveConstEnums": true,                       /* Disable erasing 'const enum' declarations in generated code. */
+    // "declarationDir": "./",                           /* Specify the output directory for generated declaration files. */
+    // "preserveValueImports": true,                     /* Preserve unused imported values in the JavaScript output that would otherwise be removed. */
+    // ================================互操作配置=============================
+    "isolatedModules": true, /* 确保每个文件都可以安全地转译，而不依赖于其他导入 */
+    "allowSyntheticDefaultImports": true, /* 当一个模块没有显示导出export default y的时候，也允许再另一个模块中使用import x from y的语法 */
+    "esModuleInterop": true, /* 项目开发的时候运行使用esm模块化方式开发，使用场景：如果加载的第三方包是cjs模块的，开发代码可以使用esm的方式来导入，编译时会转换esm成cjs，即这个功能屏蔽了esm和cjs之间的差异  */
+    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    "forceConsistentCasingInFileNames": true, /* tsc编译文件的时候，严格检查文件名的大小写完全正确，使用场景:import pluginManager,但实际上文件名是PluginManager，打开这个配置，会强制要求改成对的大写名字，小写不通过*/
+    // ================================类型检查================================
+    "strict": true, /* tsc编译文件的时候，进行类型检查：检查的项包括下面所有类型检查的项 */
+    "noImplicitAny": true, /* tsc编译文件的时候，进行类型检查：发现变量有隐式any类型的时候必须显示指定any */
+    "strictNullChecks": true, /* tsc编译文件的时候，进行类型检查：严格检查一个变量是否可能存在null的情况，或者禁止null赋值给一个非null的类型 */
+    // "strictFunctionTypes": true,                      /* When assigning functions, check to ensure parameters and the return values are subtype-compatible. */
+    // "strictBindCallApply": true,                      /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */
+    // "strictPropertyInitialization": true,             /* Check for class properties that are declared but not set in the constructor. */
+    "noImplicitThis": true, /* tsc编译文件的时候，进行类型检查：发现this变量指向有隐患的时候必须显示指定this的类型 */
+    // "useUnknownInCatchVariables": true,               /* Default catch clause variables as 'unknown' instead of 'any'. */
+    "alwaysStrict": true, /* tsc编译文件的时候，在转换成js语法的时候，文件顶上打上'use strict'标签（其实使用模块化编程，默认都是严格模式，打不打'use strict'标签都是严格模式） */
+    // "noUnusedLocals": true,                           /* Enable error reporting when local variables aren't read. */
+    // "noUnusedParameters": true,                       /* Raise an error when a function parameter isn't read. */
+    // "exactOptionalPropertyTypes": true,               /* Interpret optional property types as written, rather than adding 'undefined'. */
+    // "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
+    "noFallthroughCasesInSwitch": true, /* tsc编译文件的时候，进行类型检查：强制要求Switch语句每个分支具有break；不能穿透 */
+    // "noUncheckedIndexedAccess": true,                 /* Add 'undefined' to a type when accessed using an index. */
+    // "noImplicitOverride": true,                       /* Ensure overriding members in derived classes are marked with an override modifier. */
+    // "noPropertyAccessFromIndexSignature": true,       /* Enforces using indexed accessors for keys declared using an indexed type. */
+    // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
+    // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
+    // ================================JS支持===================================
+    "allowJs": true, /* tsc编译文件的时候，也会编译js文件（默认是编译ts） */
+    "checkJs": true, /* tsc编译文件的时候，对js文件也进行类型检查  */
+    // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
+    // ================================Completeness=============================
+    // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
+    "skipLibCheck": true /* tsc编译文件的时候，进行类型检查：发现是.d.ts声明文件，那就跳过声明文件的类型检查 */
+  }
+}
